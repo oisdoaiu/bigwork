@@ -111,7 +111,7 @@ class BaseTrainer:
             self.wdir.mkdir(parents=True, exist_ok=True)  # make dir
             self.args.save_dir = str(self.save_dir)
             yaml_save(self.save_dir / "args.yaml", vars(self.args))  # save run args
-        self.last, self.best = self.wdir / "last.pt", self.wdir / "best.pt"  # checkpoint paths
+        self.last, self.best = self.wdir / "last.pkl", self.wdir / "best.pkl"  # checkpoint paths
         self.save_period = self.args.save_period
 
         self.batch_size = self.args.batch
@@ -699,6 +699,7 @@ class BaseTrainer:
     def final_eval(self):
         """Performs final evaluation and validation for object detection YOLO model."""
         ckpt = {}
+        print(self.last, " ",self.best)
         for f in self.last, self.best:
             if f.exists():
                 if f is self.last:

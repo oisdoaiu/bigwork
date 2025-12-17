@@ -122,7 +122,6 @@ class BaseValidator:
             self.args.plots &= trainer.stopper.possible_stop or (trainer.epoch == trainer.epochs - 1)
             model.eval()
         else:
-            exit()
             if str(self.args.model).endswith(".yaml"):
                 LOGGER.warning("WARNING ⚠️ validating an untrained model YAML will result in 0 mAP.")
             callbacks.add_integration_callbacks(self)
@@ -136,11 +135,11 @@ class BaseValidator:
             # self.model = model
             self.device = self.args.device# model.device  # update device
             self.args.half = model.fp16  # update half
-            stride, pt, jit, engine = model.stride, model.pt, model.jit, model.engine
+            stride, pt, jit, pkl, engine = model.stride, model.pt, model.jit, model.pkl, model.engine
             imgsz = check_imgsz(self.args.imgsz, stride=stride)
             if engine:
                 self.args.batch = model.batch_size
-            elif not pt and not jit:
+            elif not pkl and not pt and not jit:
                 self.args.batch = model.metadata.get("batch", 1)  # export.py models default to batch-size 1
                 LOGGER.info(f"Setting batch={self.args.batch} input of shape ({self.args.batch}, 3, {imgsz}, {imgsz})")
 
@@ -154,12 +153,17 @@ class BaseValidator:
             # 修复：Jittor中device是字符串，不是设备对象
             if self.device in {"cpu", "mps"}:
                 self.args.workers = 0  # faster CPU val as time dominated by inference, not dataloading
-            if not pt:
+            if not pt and not pkl:
                 self.args.rect = False
             self.stride = model.stride  # used in get_dataloader() for padding
             self.dataloader = self.dataloader or self.get_dataloader(self.data.get(self.args.split), self.args.batch)
-
+            
+            del_attrs = {}
+            del_attrs['self'] = model.__dict__.pop('self')
             model.eval()
+            for attr_name, attr_value in del_attrs.items():
+                self.__dict__[attr_name] = attr_value
+
             model.warmup(imgsz=(1 if pt else self.args.batch, 3, imgsz, imgsz))  # warmup
 
         self.run_callbacks("on_val_start")

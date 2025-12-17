@@ -815,7 +815,7 @@ def jittor_safe_load(weight, safe_only=False):
     """
     from nkyolo.utils.downloads import attempt_download_asset
 
-    check_suffix(file=weight, suffix=".pt")
+    check_suffix(file=weight, suffix=".pkl")
     file = attempt_download_asset(weight)  # search online if missing locally
     try:
         with temporary_modules(
@@ -979,10 +979,10 @@ def attempt_load_one_weight(weight, device=None, inplace=True, fuse=False):
         elif ckpt.get("model"):
             model.load_state_dict(ckpt["model"])
         
-        model = model.to(device).float()  # FP32 model
+        model = model.float32()  # FP32 model
     else:
         # 原有的加载逻辑（向后兼容）
-        model = (ckpt.get("ema") or ckpt["model"]).to(device).float()  # FP32 model
+        model = (ckpt.get("ema") or ckpt["model"]).float32()  # FP32 model
 
     # Model compatibility updates
     model.args = {k: v for k, v in args.items() if k in DEFAULT_CFG_KEYS}  # attach args to model

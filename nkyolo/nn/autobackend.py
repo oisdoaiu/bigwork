@@ -122,9 +122,10 @@ class AutoBackend(nn.Module):
             tfjs,
             paddle,
             ncnn,
-            triton,
+            pkl,
+            triton
         ) = self._model_type(w)
-        fp16 &= pt or jit or onnx or xml or engine or nn_module or triton  # FP16
+        fp16 &= pt or pkl or onnx or xml or engine or nn_module or triton or pkl  # FP16
         nhwc = coreml or saved_model or pb or tflite or edgetpu  # BHWC formats (vs jt BCWH)
         stride = 32  # default stride
         model, metadata, task = None, None, None
@@ -136,7 +137,7 @@ class AutoBackend(nn.Module):
         #     cuda = False
 
         # Download if not local
-        if not (pt or triton or nn_module):
+        if not (pt or triton or nn_module or pkl):
             w = attempt_download_asset(w)
 
         # In-memory Pyjt model
@@ -149,7 +150,20 @@ class AutoBackend(nn.Module):
             stride = max(int(model.stride.max()), 32)  # model stride
             names = model.module.names if hasattr(model, "module") else model.names  # get class names
             self.model = model  # explicitly assign for to(), cpu(), cuda(), half()
-            pt = True
+            pkl = True
+
+        elif pkl:
+            from nkyolo.nn.tasks import attempt_load_weights
+
+            model = attempt_load_weights(
+                weights if isinstance(weights, list) else w, device=device, inplace=True, fuse=fuse
+            )
+            if hasattr(model, "kpt_shape"):
+                kpt_shape = model.kpt_shape  # pose-only
+            stride = max(int(model.stride.max()), 32)  # model stride
+            names = model.module.names if hasattr(model, "module") else model.names  # get class names
+            model.half() if fp16 else model.float32()
+            self.model = model  # explicitly assign for to(), cpu(), cuda(), half()
 
         # Pyjt
         elif pt:
@@ -398,13 +412,13 @@ class AutoBackend(nn.Module):
         # NVIDIA Triton Inference Server
         elif triton:
             check_requirements("tritonclient[all]")
-            from jittoryolo.utils.triton import TritonRemoteModel
+            from nkyolo.utils.triton import TritonRemoteModel
 
             model = TritonRemoteModel(w)
 
         # Any other format (unsupported)
         else:
-            from jittoryolo.engine.exporter import export_formats
+            # from nkyolo.engine.exporter import export_formats
 
             raise TypeError(
                 f"model='{w}' is not a supported model format. Ultralytics supports: {export_formats()['Format']}\n"
@@ -426,7 +440,7 @@ class AutoBackend(nn.Module):
             imgsz = metadata["imgsz"]
             names = metadata["names"]
             kpt_shape = metadata.get("kpt_shape")
-        elif not (pt or triton or nn_module):
+        elif not (pkl or pt or triton or nn_module):
             LOGGER.warning(f"WARNING ⚠️ Metadata not found for 'model={weights}'")
 
         # Check names
@@ -436,6 +450,10 @@ class AutoBackend(nn.Module):
 
         # Disable gradients
         if pt:
+            for p in model.parameters():
+                p.requires_grad = False
+        
+        if pkl:
             for p in model.parameters():
                 p.requires_grad = False
 
@@ -462,6 +480,9 @@ class AutoBackend(nn.Module):
 
         # Pyjt
         if self.pt or self.nn_module:
+            y = self.model(im, augment=augment, visualize=visualize, embed=embed)
+
+        elif self.pkl:
             y = self.model(im, augment=augment, visualize=visualize, embed=embed)
 
         # jtScript
@@ -640,7 +661,7 @@ class AutoBackend(nn.Module):
             imgsz (tuple): The shape of the dummy input tensor in the format (batch_size, channels, height, width)
         """
 
-        warmup_types = self.pt, self.jit, self.onnx, self.engine, self.saved_model, self.pb, self.triton, self.nn_module
+        warmup_types = self.pt, self.jit, self.onnx, self.engine, self.saved_model, self.pb, self.pkl, self.triton, self.nn_module
         if any(warmup_types):
             im = jt.empty(*imgsz, dtype=jt.half if self.fp16 else jt.float)  # input
             for _ in range(2 if self.jit else 1):
@@ -659,7 +680,6 @@ class AutoBackend(nn.Module):
             >>> model = AutoBackend(weights="path/to/model.onnx")
             >>> model_type = model._model_type()  # returns "onnx"
         """
-
         sf = export_formats()["Suffix"]  # export suffixes
         if not is_url(p) and not isinstance(p, str):
             check_suffix(p, sf)  # checks
@@ -681,8 +701,8 @@ class AutoBackend(nn.Module):
 def export_formats():
     """jittoryolo YOLO export formats."""
     x = [
-        ["Pyjt", "-", ".pt", True, True],
-        ["jtScript", "jtscript", ".jtscript", True, True],
+        ["PyTorch", "-", ".pt", True, True, []],
+        ["TorchScript", "torchscript", ".torchscript", True, True, ["batch", "optimize", "half", "nms", "dynamic"]],
         ["ONNX", "onnx", ".onnx", True, True],
         ["OpenVINO", "openvino", "_openvino_model", True, False],
         ["TensorRT", "engine", ".engine", False, True],
@@ -694,5 +714,6 @@ def export_formats():
         ["TensorFlow.js", "tfjs", "_web_model", True, False],
         ["PaddlePaddle", "paddle", "_paddle_model", True, True],
         ["NCNN", "ncnn", "_ncnn_model", True, True],
+        ["Jittor", "-", ".pkl", True, True, []]
     ]
     return dict(zip(["Format", "Argument", "Suffix", "CPU", "GPU"], zip(*x)))
