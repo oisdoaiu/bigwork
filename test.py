@@ -1,6 +1,6 @@
 from nkyolo.models.yolo.model import YOLO
 
-model = YOLO("yolov8.yaml", task="detect", verbose=True)
+model = YOLO("yolov5s.yaml", task="detect", verbose=True)
 
 # model.train()
 
@@ -11,7 +11,7 @@ train_results = model.train(
     device="cpu",  # 运行设备 (例如 'cpu', 0, [0,1,2,3])
 )
 
-metrics = model.val()
+# metrics = model.val()
 
 # results = model("path/to/image.jpg")  # Predict on an image
 # results[0].show()  # Display results
