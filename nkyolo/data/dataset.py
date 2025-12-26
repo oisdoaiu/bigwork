@@ -231,9 +231,11 @@ class YOLODataset(BaseDataset):
                 new_batch[k] = jt.stack(values, 0)
             elif k == "cls":
                 # TODO: 类别索引可能长度不同，保持为列表
+                values = [var for var in values if var.numel()>0]
                 new_batch[k] = jt.concat(values, 0)# values
             elif k == "bboxes":
                 # TODO: 边界框可能大小不同，保持为列表
+                values = [var for var in values if var.numel()>0]
                 new_batch[k] = jt.concat(values, 0)# values
             elif k == "batch_idx":
                 # # 创建批次索引

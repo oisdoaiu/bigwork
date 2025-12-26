@@ -289,7 +289,12 @@ def non_max_suppression(
             i = nms_rotated(boxes, scores, iou_thres)
         else:
             boxes = x[:, :4] + c  # boxes (offset by class)
-            i = jt.ops.nms(boxes, scores, iou_thres)  # NMS
+            box_score = []
+            for i in range(len(boxes)):
+                box_score.append(jt.concat([boxes[i],scores[i]]).unsqueeze(0))
+            box_score = jt.concat(box_score)
+
+            i = jt.misc.nms(box_score, iou_thres)  # NMS
         i = i[:max_det]  # limit detections
 
         # # Experimental

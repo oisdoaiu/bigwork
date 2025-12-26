@@ -251,7 +251,7 @@ class DETRLoss(nn.Module):
         #     loss.update(self._get_loss_mask(masks, gt_mask, match_indices, postfix))
         return loss
 
-    def forward(self, pred_bboxes, pred_scores, batch, postfix="", **kwargs):
+    def execute(self, pred_bboxes, pred_scores, batch, postfix="", **kwargs):
         """
         Calculate loss for predicted bounding boxes and scores.
 
