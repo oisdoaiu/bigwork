@@ -4,7 +4,7 @@ model = YOLO("yolov5s.yaml", task="detect", verbose=True)
 
 
 train_results = model.train(
-    data="coco128.yaml",  # 数据集配置文件路径
+    data="coco8.yaml",  # 数据集配置文件路径
     epochs=300,  # 训练周期数
     imgsz=640,  # 训练图像尺寸
     device="cpu",  # 运行设备 (例如 'cpu', 0, [0,1,2,3])
