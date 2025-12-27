@@ -417,6 +417,8 @@ def safe_deepcopy_jittor(obj):
             try:
                 # Create a new instance of the same class
                 new_obj = obj.__class__(verbose=False)
+                new_obj.model[24].strides = obj.model[24].strides
+                new_obj.model[24].anchors = obj.model[24].anchors
                 # Copy state dict manually
                 state_dict = obj.state_dict()
                 new_state_dict = {}

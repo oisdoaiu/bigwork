@@ -1,0 +1,441 @@
+DetectionModel(
+    model: Sequential(
+        0: Conv(
+            conv: Conv(3, 32, (6, 6), (2, 2), (2, 2), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(32, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        1: Conv(
+            conv: Conv(32, 64, (3, 3), (2, 2), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        2: C3(
+            cv1: Conv(
+                conv: Conv(64, 32, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(32, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(64, 32, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(32, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(32, 32, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(32, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(32, 32, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(32, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        3: Conv(
+            conv: Conv(64, 128, (3, 3), (2, 2), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        4: C3(
+            cv1: Conv(
+                conv: Conv(128, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(128, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(64, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+                1: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(64, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        5: Conv(
+            conv: Conv(128, 256, (3, 3), (2, 2), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        6: C3(
+            cv1: Conv(
+                conv: Conv(256, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(256, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(256, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+                1: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+                2: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        7: Conv(
+            conv: Conv(256, 512, (3, 3), (2, 2), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(512, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        8: C3(
+            cv1: Conv(
+                conv: Conv(512, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(512, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(512, 512, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(512, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(256, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(256, 256, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        9: SPPF(
+            cv1: Conv(
+                conv: Conv(512, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(1024, 512, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(512, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: MaxPool2d(
+                _layer: Pool((5, 5), (1, 1), (2, 2), dilation=None, return_indices=None, ceil_mode=False, count_include_pad=True, op=maximum, item=None)
+            )
+        )
+        10: Conv(
+            conv: Conv(512, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        11: Upsample(2.0, mode=nearest, align_corners=False)
+        12: Concat(None)
+        13: C3(
+            cv1: Conv(
+                conv: Conv(512, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(512, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(256, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        14: Conv(
+            conv: Conv(256, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        15: Upsample(2.0, mode=nearest, align_corners=False)
+        16: Concat(None)
+        17: C3(
+            cv1: Conv(
+                conv: Conv(256, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(256, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(64, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        18: Conv(
+            conv: Conv(128, 128, (3, 3), (2, 2), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        19: Concat(None)
+        20: C3(
+            cv1: Conv(
+                conv: Conv(256, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(256, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(256, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(128, 128, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        21: Conv(
+            conv: Conv(256, 256, (3, 3), (2, 2), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+            act: silu()
+        )
+        22: Concat(None)
+        23: C3(
+            cv1: Conv(
+                conv: Conv(512, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv2: Conv(
+                conv: Conv(512, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            cv3: Conv(
+                conv: Conv(512, 512, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                bn: BatchNorm(512, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                act: silu()
+            )
+            m: Sequential(
+                0: Bottleneck(
+                    cv1: Conv(
+                        conv: Conv(256, 256, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    cv2: Conv(
+                        conv: Conv(256, 256, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(256, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                )
+            )
+        )
+        24: Detect(
+            cv2: Sequential(
+                0: Sequential(
+                    0: Conv(
+                        conv: Conv(128, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    1: Conv(
+                        conv: Conv(64, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    2: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, float32[64,], None, None, Kw=None, fan=None, i=None, bound=None)
+                )
+                1: Sequential(
+                    0: Conv(
+                        conv: Conv(256, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    1: Conv(
+                        conv: Conv(64, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    2: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, float32[64,], None, None, Kw=None, fan=None, i=None, bound=None)
+                )
+                2: Sequential(
+                    0: Conv(
+                        conv: Conv(512, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    1: Conv(
+                        conv: Conv(64, 64, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(64, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    2: Conv(64, 64, (1, 1), (1, 1), (0, 0), (1, 1), 1, float32[64,], None, None, Kw=None, fan=None, i=None, bound=None)
+                )
+            )
+            cv3: Sequential(
+                0: Sequential(
+                    0: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    1: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    2: Conv(128, 80, (1, 1), (1, 1), (0, 0), (1, 1), 1, float32[80,], None, None, Kw=None, fan=None, i=None, bound=None)
+                )
+                1: Sequential(
+                    0: Conv(
+                        conv: Conv(256, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    1: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    2: Conv(128, 80, (1, 1), (1, 1), (0, 0), (1, 1), 1, float32[80,], None, None, Kw=None, fan=None, i=None, bound=None)
+                )
+                2: Sequential(
+                    0: Conv(
+                        conv: Conv(512, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    1: Conv(
+                        conv: Conv(128, 128, (3, 3), (1, 1), (1, 1), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+                        bn: BatchNorm(128, 0.001, momentum=0.03, affine=True, is_train=False, sync=True)
+                        act: silu()
+                    )
+                    2: Conv(128, 80, (1, 1), (1, 1), (0, 0), (1, 1), 1, float32[80,], None, None, Kw=None, fan=None, i=None, bound=None)
+                )
+            )
+            dfl: DFL(
+                conv: Conv(16, 1, (1, 1), (1, 1), (0, 0), (1, 1), 1, None, None, None, Kw=None, fan=None, i=None, bound=None)
+            )
+        )
+    )
+)

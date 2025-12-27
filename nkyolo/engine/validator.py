@@ -267,7 +267,7 @@ class BaseValidator:
                         # matches = matches[matches[:, 2].argsort()[::-1]]
                         matches = matches[np.unique(matches[:, 0], return_index=True)[1]]
                     correct[matches[:, 1].astype(int), i] = True
-        return jt.tensor(correct, dtype=jt.bool, device=pred_classes.device)
+        return jt.array(correct, dtype=jt.bool)
 
     def add_callback(self, event: str, callback):
         """Appends the given callback."""
