@@ -2,6 +2,7 @@ import contextlib
 import pickle
 import re
 import types
+import numpy as np
 from copy import deepcopy
 from pathlib import Path
 
@@ -274,9 +275,9 @@ class BaseModel(nn.Module):
             verbose (bool, optional): Whether to log the transfer progress. Defaults to True.
         """
         model = weights["model"] if isinstance(weights, dict) else weights  # torchvision models are not dicts
-        csd = model.float().state_dict()  # checkpoint state_dict as FP32
+        csd = model.float32().state_dict()  # checkpoint state_dict as FP32
         csd = intersect_dicts(csd, self.state_dict())  # intersect
-        self.load_state_dict(csd, strict=False)  # load
+        self.load_state_dict(csd)  # load
         if verbose:
             LOGGER.info(f"Transferred {len(csd)}/{len(self.model.state_dict())} items from pretrained weights")
 
@@ -839,6 +840,30 @@ def jittor_safe_load(weight, safe_only=False):
                     ckpt = jt.load(f, pickle_module=safe_pickle)
             else:
                 ckpt = jt.load(file)
+
+            from nkyolo.models.yolo.model import YOLO
+            
+            model = YOLO("yolov5s.yaml", task="detect", verbose=True)
+            tmpmodel = model.model
+
+            # 2. 加载步骤1导出的权重（二选一即可）
+            # 方式2：加载 .npz 格式权重（无 PyTorch 依赖，推荐）
+            npz_dict = np.load("model_weights.npz")
+            for name, param in tmpmodel.named_parameters():
+                if name in npz_dict:
+                    # 直接加载 numpy 数组转为 Jittor 张量
+                    weight_np = npz_dict[name]
+                    jt_weight = jt.array(weight_np)
+                    param.assign(jt_weight)
+                else:
+                    print(f"权重 {name} 未在 nkyolo 模型中找到,使用默认参数")
+
+            print("权重加载成功,nkyolo 模型创建完成")
+
+            # 注意：Jittor 模型保存为 pkl 时，建议先切换到 eval 模式
+            tmpmodel.eval()
+            ckpt["model"] = tmpmodel
+            # print(type(ckpt))
 
     except ModuleNotFoundError as e:  # e.name is missing module name
         if e.name == "models":

@@ -113,8 +113,7 @@ class DetectionValidator(BaseValidator):
         ratio_pad = batch["ratio_pad"][si]
         if len(cls):
             bbox = ops.xywh2xyxy(bbox) * jt.array(list(imgsz))[[1, 0, 1, 0]]  # target boxes
-
-            ops.scale_boxes(imgsz, bbox, ori_shape, ratio_pad=ratio_pad)  # native-space labels
+            # ops.scale_boxes(imgsz, bbox, ori_shape, ratio_pad=ratio_pad)  # native-space labels
         return {"cls": cls, "bbox": bbox, "ori_shape": ori_shape, "imgsz": imgsz, "ratio_pad": ratio_pad}
 
     def _prepare_pred(self, pred, pbatch):
@@ -135,8 +134,7 @@ class DetectionValidator(BaseValidator):
                 pred_cls=jt.zeros(0),
                 tp=jt.zeros(npr, self.niou, dtype=jt.bool),
             )
-
-            pbatch = self._prepare_batch(si, batch)
+            pbatch = self._prepare_batch(si, batch) 
             cls, bbox = pbatch.pop("cls"), pbatch.pop("bbox")
             nl = len(cls)
             stat["target_cls"] = cls
@@ -229,6 +227,7 @@ class DetectionValidator(BaseValidator):
             intermediate representation used for evaluating predictions against ground truth.
         """
         iou = box_iou(gt_bboxes, detections[:, :4])
+        tp = self.match_predictions(detections[:, 5], gt_cls, iou)
         return self.match_predictions(detections[:, 5], gt_cls, iou)
 
     def build_dataset(self, img_path, mode="val", batch=None):

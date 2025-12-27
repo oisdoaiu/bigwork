@@ -220,7 +220,7 @@ class Model(nn.Module):
             weights = checks.check_file(weights, download_dir=SETTINGS["weights_dir"])  # download and return local file
         weights = checks.check_model_file_from_stem(weights)  # add suffix, i.e. yolov8n -> yolov8n.pt
 
-        if Path(weights).suffix == ".pt":
+        if Path(weights).suffix == ".pkl":
             self.model, self.ckpt = attempt_load_one_weight(weights)
             self.task = self.model.args["task"]
             self.overrides = self.model.args = self._reset_ckpt_args(self.model.args)
@@ -251,7 +251,7 @@ class Model(nn.Module):
             >>> model = Model("yolov8n.onnx")
             >>> model._check_is_pytorch_model()  # Raises TypeError
         """
-        pt_str = isinstance(self.model, (str, Path)) and Path(self.model).suffix == ".pt"
+        pt_str = isinstance(self.model, (str, Path)) and Path(self.model).suffix == ".pkl"
         pt_module = isinstance(self.model, nn.Module)
         if not (pt_module or pt_str):
             raise TypeError(
@@ -288,33 +288,33 @@ class Model(nn.Module):
             p.requires_grad = True
         return self
 
-    def load(self, weights: Union[str, Path] = "yolo11n.pt") -> "Model":
-        """
-        Loads parameters from the specified weights file into the model.
+    # def load(self, weights: Union[str, Path] = "yolo11n.pt") -> "Model":
+    #     """
+    #     Loads parameters from the specified weights file into the model.
 
-        This method supports loading weights from a file or directly from a weights object. It matches parameters by
-        name and shape and transfers them to the model.
+    #     This method supports loading weights from a file or directly from a weights object. It matches parameters by
+    #     name and shape and transfers them to the model.
 
-        Args:
-            weights (Union[str, Path]): Path to the weights file or a weights object.
+    #     Args:
+    #         weights (Union[str, Path]): Path to the weights file or a weights object.
 
-        Returns:
-            (Model): The instance of the class with loaded weights.
+    #     Returns:
+    #         (Model): The instance of the class with loaded weights.
 
-        Raises:
-            AssertionError: If the model is not a PyTorch model.
+    #     Raises:
+    #         AssertionError: If the model is not a PyTorch model.
 
-        Examples:
-            >>> model = Model()
-            >>> model.load("yolo11n.pt")
-            >>> model.load(Path("path/to/weights.pt"))
-        """
-        self._check_is_pytorch_model()
-        if isinstance(weights, (str, Path)):
-            self.overrides["pretrained"] = weights  # remember the weights for DDP training
-            weights, self.ckpt = attempt_load_one_weight(weights)
-        self.model.load(weights)
-        return self
+    #     Examples:
+    #         >>> model = Model()
+    #         >>> model.load("yolo11n.pt")
+    #         >>> model.load(Path("path/to/weights.pt"))
+    #     """
+    #     self._check_is_pytorch_model()
+    #     if isinstance(weights, (str, Path)):
+    #         self.overrides["pretrained"] = weights  # remember the weights for DDP training
+    #         weights, self.ckpt = attempt_load_one_weight(weights)
+    #     self.model.load(weights)
+    #     return self
 
     def save(self, filename: Union[str, Path] = "saved_model.pt") -> None:
         """
